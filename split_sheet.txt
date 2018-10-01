@@ -1,0 +1,41 @@
+Sub split_Sheet()
+
+    Dim rng As Range
+    Dim colsCnt As Integer
+    Dim colNm As String
+    Dim Imsi
+    Dim sht As Long
+    
+    Application.ScreenUpdating = False
+    For sht = Sheets.Count To 2 Step -1
+        Application.DisplayAlerts = False
+        Sheets(sht).Delete
+        Application.DisplayAlerts = True
+    Next sht
+    colNm = InputBox("시트로 분리할 필드의 열 머리글을 입력해 주세요.", "필드 머리글 입력")
+    
+    Set rng = ActiveSheet.UsedRange
+    colsCnt = rng.Columns.Count
+    
+    rng.Columns(colNm).AdvancedFilter Action:=2, _
+        CopyToRange:=Cells(1, colsCnt + 1), Unique:=1
+        
+    Imsi = Range(Cells(2, colsCnt + 1), Cells(Rows.Count, colsCnt + 1).End(3))
+                                                                                       
+    For sht = 1 To UBound(Imsi, 1)
+        Sheets.Add After:=Sheets(Sheets.Count)
+        ActiveSheet.Name = Imsi(sht, 1)
+    Next sht
+    
+    Sheets(1).Activate
+            
+    For sht = 1 To UBound(Imsi, 1)
+        Cells(2, colsCnt + 1) = Imsi(sht, 1)
+        rng.AdvancedFilter Action:=2, CriteriaRange:=Cells(1, colsCnt + 1).Resize(2), _
+        CopyToRange:=Sheets(sht + 1).Cells(1, 1), Unique:=0
+        Sheets(sht + 1).Columns.AutoFit
+    Next sht
+    Columns(colsCnt + 1).Delete
+    Set rng = Nothing
+End Sub
+
