@@ -9,4 +9,5 @@ SELECT PS.RELNAME    AS TABLE_NAME
    AND PD.OBJSUBID  = 0
 ) t_comm
 on t_comm.table_name = pg.relname
+where schemaname = 'public'
 order by RELNAME;

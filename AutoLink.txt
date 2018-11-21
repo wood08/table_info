@@ -1,0 +1,25 @@
+Sub AutoLink()
+ 
+
+Dim cnt As Integer
+Dim wb As Workbook
+ 
+cnt = Application.ActiveWorkbook.Sheets.Count      '워크북의 모든 시트 갯수
+Set wb = Workbooks(Application.ActiveWorkbook.Name)   '워크북
+
+ 
+Worksheets("Sheet1").Select   '첫번째 시트에 내용이 기록되게 Sheet1 선택
+ 
+For i = 1 To cnt
+Range("c" & i + 1).Select   '시트이름 기록할 셀
+  With ActiveSheet
+    .Hyperlinks.Add Anchor:=Selection, _
+     Address:="#" & wb.Sheets(i).Name & "!A1", _
+     SubAddress:="", _
+     TextToDisplay:=wb.Sheets(i).Name
+  End With
+ 
+Next
+ 
+End Sub
+
